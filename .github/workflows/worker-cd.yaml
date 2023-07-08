@@ -8,11 +8,11 @@ on:
 
 env:
   AWS_REGION: us-east-2                
-  ECR_REPOSITORY: nft-rent-marketplace-worker         
+  ECR_REPOSITORY: nft-rent-marketplace-worker-oasys         
   ECS_SERVICE: nft-rent-mktplace-worker-svc                
   ECS_CLUSTER: nft-rent-marketplace-api                 
   ECS_TASK_DEFINITION: .aws/worker-task-definition.json 
-  CONTAINER_NAME: nft-rent-mktplace-worker	 
+  CONTAINER_NAME: nft-rent-marketplace-worker-oasys	 
   WALLET_PV_KEY: ${{ secrets.WALLET_PV_KEY }}
   BLOCKCHAIN_RPC_URL: ${{ secrets.BLOCKCHAIN_RPC_URL }}
   NFT_RENT_MARKETPLACE_CONTRACT: ${{ secrets.NFT_RENT_MARKETPLACE_CONTRACT }}

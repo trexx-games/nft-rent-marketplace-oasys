@@ -1,4 +1,4 @@
-service: nft-rent-marketplace-api
+service: nft-rent-marketplace-api-oasys
 
 provider:
   name: aws
