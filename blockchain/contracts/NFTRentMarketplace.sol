@@ -322,10 +322,6 @@ contract NFTRentMarketplace is ConfirmedOwner, IERC721Receiver {
       itemRandomIndex = randomNumber % pool.availableItems.length;
       selectedItemId = pool.availableItems[itemRandomIndex];
       item = items[selectedItemId];
-      attempts++;
-      if (attempts > pool.availableItems.length) {
-        revert("All items in the pool belong to the same owner.");
-      }
     } while (item.owner == _owner);
     return (item, itemRandomIndex, randomNumber);
   }
