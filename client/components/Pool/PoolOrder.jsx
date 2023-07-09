@@ -44,9 +44,7 @@ export default function PoolOrder({ pool }) {
   }
   const [isLoading, setIsLoading] = useState(false);
   const [nft, setNft] = useState(null);
-  const [poolUSDPrice, setPoolUSDPrice] = useState(0);
-  const [poolMATICPrice, setPoolMATICPrice] = useState(0);
-  const [poolMATICFormatedPrice, setPoolMATICFormatedPrice] = useState(0);
+  const [poolPrice, setPoolPrice] = useState(0);
   const [rentDays, setRentDays] = useState(1);
 
   useEffect(() => {
@@ -75,9 +73,9 @@ export default function PoolOrder({ pool }) {
       const result = await contract.call(
         'startRent',
         [pool.category_id, Number(rentDays)],
-        { value: poolMATICPrice },
+        { value: poolPrice },
       );
-      const nftId = result.receipt.events[0].args.itemNftId.toNumber();
+      const nftId = result.receipt.events[0].args.itemNftId.toNumber(); //fixme
       const nft = await getNft(nftId, pool.game_id);
       setNft(nft);
       onOpen();
@@ -162,10 +160,7 @@ export default function PoolOrder({ pool }) {
                 Price:
               </Text>
               <Text mt={2} fontSize={20} fontFamily={'Dela Gothic One'}>
-                USD {Number(poolUSDPrice).toFixed(2)}
-              </Text>
-              <Text mt={2} fontSize={20} fontFamily={'Dela Gothic One'}>
-                AVAX {poolMATICFormatedPrice}
+                OAS {Number(poolPrice).toFixed(2)}
               </Text>
             </Flex>
           </Box>
