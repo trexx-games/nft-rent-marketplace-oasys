@@ -57,11 +57,13 @@ class NFTRentMarketplaceEventWorker {
   async onPoolCreated(event) {
     try {
       const payload = {
-        poolId: Number(`${event.data.poolId._hex}`),
+        categoryId: Number(`${event.data.poolId._hex}`),
         basePrice: Number(`${event.data.basePrice._hex}`),
+        gameId: 1,
       }
       await axios.post(`${this.nftRentMarketplaceApi}/pools/create-pool`, payload);
     } catch (error) {
+      console.log(error);
       console.error('Error:', error.message);
     }
   }
@@ -80,6 +82,7 @@ class NFTRentMarketplaceEventWorker {
       }
       await axios.post(`${this.nftRentMarketplaceApi}/items/create-item`, payload);
     } catch (error) {
+      console.log(error);
       console.error('Error:', error.message);
     }
   }

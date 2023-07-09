@@ -9,7 +9,7 @@ on:
 env:
   AWS_REGION: us-east-2                
   ECR_REPOSITORY: nft-rent-marketplace-worker-oasys         
-  ECS_SERVICE: nft-rent-mktplace-worker-svc                
+  ECS_SERVICE: nft-rent-mktplace-worker-oasys-svc                
   ECS_CLUSTER: nft-rent-marketplace-api                 
   ECS_TASK_DEFINITION: .aws/worker-task-definition.json 
   CONTAINER_NAME: nft-rent-marketplace-worker-oasys	 
