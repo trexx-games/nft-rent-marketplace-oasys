@@ -68,22 +68,17 @@ function RentedNFT({ nftId, rentData }) {
 }
 export default function Inventory() {
   const address = useAddress();
+  //ver o useContract, como fazer para usar a Oasys
   const { contract: nftCollectionBBG } = useContract(NFT_BBG_ADDRESS);
-  const { contract: nftCollectionCS } = useContract(NFT_CS_ADDRESS);
   const { data: ownedNftsBBG, isLoading: isLoadingBBG } = useOwnedNFTs(
     nftCollectionBBG,
     address,
   );
-  const { data: ownedNftsCS, isLoading: isLoadingCS } = useOwnedNFTs(
-    nftCollectionCS,
-    address,
-  );
   const ownedNftsBBGWithContract = ownedNftsBBG?.map(nft => ({ ...nft, contract: NFT_BBG_ADDRESS })) || [];
-  const ownedNftsCSWithContract = ownedNftsCS?.map(nft => ({ ...nft, contract: NFT_CS_ADDRESS })) || [];
 
-  const ownedNfts = [...ownedNftsBBGWithContract, ...ownedNftsCSWithContract];
+  const ownedNfts = [...ownedNftsBBGWithContract];
 
-  const isLoading = isLoadingBBG || isLoadingCS;
+  const isLoading = isLoadingBBG;
   const { data: rentedItems, isLoading: rentedItemsLoading } = useSWR(
     `${URLS.RENTS}/get-active-by-rentee/${address}`,
     fetcher,
