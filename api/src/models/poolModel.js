@@ -9,7 +9,7 @@ class PoolModel {
     const imageUrl = `https://nft-rent-marketplace.s3.us-east-2.amazonaws.com/categories/${categoryId}.png`
     const query = `
       INSERT INTO pools (category_id, game_id, base_price, image_url, is_active)
-      VALUES ($1, $2, $3, '${imageUrl}', false)
+      VALUES ($1, $2, $3, '${imageUrl}', true)
       RETURNING *;
     `;
 
