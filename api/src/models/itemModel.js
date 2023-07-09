@@ -21,7 +21,7 @@ class ItemModel {
     }
   }
 
-  async createItem({ itemId, categoryId, owner, gameId, nftContractAddress, nftId, rarityId, blockchainId }) {
+  async createItem({ itemId, categoryId, ownerAddress, gameId, nftContractAddress, nftId, rarityId, blockchainId }) {
     const query = `
     INSERT INTO items (id, category_id, owner_address, rentee_address, is_in_pool, game_id, nft_contract_address, nft_id, rarity_id, blockchain_id, is_rented) 
     VALUES ($1, $2, $3, NULL, false, $4, $5, $6, $7, $8, false)
@@ -29,7 +29,7 @@ class ItemModel {
   `;
 
     try {
-      const result = await this.pool.query(query, [itemId, categoryId, owner, gameId, nftContractAddress, nftId, rarityId, blockchainId]);
+      const result = await this.pool.query(query, [itemId, categoryId, ownerAddress, gameId, nftContractAddress, nftId, rarityId, blockchainId]);
       return camelize(result.rows[0]);
     } catch (error) {
       console.error("Error creating item: ", error.stack);
