@@ -1,6 +1,7 @@
 const { ThirdwebSDK } = require('@thirdweb-dev/sdk');
 const axios = require('axios');
 const env = require('./config/env');
+const { OASYS_CONNECTION } = require('./config/blockchain');
 
 
 class NFTRentMarketplaceEventWorker {
@@ -13,7 +14,7 @@ class NFTRentMarketplaceEventWorker {
   }
 
   async init() {
-    this.sdk = await ThirdwebSDK.fromPrivateKey(this.privateKey, 'mumbai');
+    this.sdk = await ThirdwebSDK.fromPrivateKey(this.privateKey, OASYS_CONNECTION);
     this.contract = await this.sdk.getContract(this.contractAddress);
     this.contract.events.addEventListener('RentStarted', this.onRentStarted.bind(this));
     this.contract.events.addEventListener('PoolCreated', this.onPoolCreated.bind(this));

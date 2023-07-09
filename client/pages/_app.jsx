@@ -3,12 +3,11 @@ import '../styles/globals.css';
 import { ChakraProvider } from '@chakra-ui/react';
 import { Navbar } from '../components/Navbar';
 import Head from 'next/head';
-
-const activeChain = 'avalanche-fuji';
+import { OASYS_CONNECTION } from '../const/addresses';
 
 function MyApp({ Component, pageProps }) {
   return (
-    <ThirdwebProvider activeChain={activeChain}>
+    <ThirdwebProvider activeChain={OASYS_CONNECTION}>
       <ChakraProvider>
         <Head>
           <title>NFT Rent</title>
