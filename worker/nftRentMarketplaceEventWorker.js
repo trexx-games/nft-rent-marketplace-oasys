@@ -70,7 +70,7 @@ class NFTRentMarketplaceEventWorker {
   async onItemCreated(event) {
     try {
       const payload = {
-        itemId: Number(`${event.data.itemId._hex}`),
+        id: Number(`${event.data.itemId._hex}`),
         nftId: Number(`${event.data.nftId._hex}`),
         gameId: 1,
         blockchainId: 3,
