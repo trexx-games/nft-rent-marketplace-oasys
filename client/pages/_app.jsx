@@ -3,7 +3,7 @@ import '../styles/globals.css';
 import { ChakraProvider } from '@chakra-ui/react';
 import { Navbar } from '../components/Navbar';
 import Head from 'next/head';
-import { OASYS_CONNECTION } from '../const/addresses';
+import { OASYS_CONNECTION } from '../config/blockchain';
 
 function MyApp({ Component, pageProps }) {
   return (
