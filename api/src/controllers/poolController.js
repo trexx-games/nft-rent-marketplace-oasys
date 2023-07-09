@@ -6,6 +6,7 @@ class PoolController {
   async getAll(_, res) {
     try {
       const pools = await this.poolService.getAll();
+
       if (!pools) {
         return res.status(404).json({ error: 'Pools not found.' });
       }
@@ -14,7 +15,6 @@ class PoolController {
       console.error('Error getting all pools: ', error.stack);
       res.status(500).json({ error: 'Server error.' });
     }
-
   }
 
   async getById(req, res) {
