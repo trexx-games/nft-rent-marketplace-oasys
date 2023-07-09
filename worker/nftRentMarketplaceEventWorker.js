@@ -67,10 +67,15 @@ class NFTRentMarketplaceEventWorker {
   async onItemCreated(event) {
     try {
       const payload = {
+        id: Number(`${event.data.itemId._hex}`),
         nftId: Number(`${event.data.nftId._hex}`),
+        gameId: 1,
+        blockchainId: 3,
+        rarityId: Number(`${event.data.categoryId._hex}`),
         categoryId: Number(`${event.data.categoryId._hex}`),
         rentee: event.data.rentee,
-        owner: event.data.owner,
+        ownerAddress: event.data.owner,
+        nftContractAddress: event.data.nftContractAddress,
       }
       await axios.post(`${this.nftRentMarketplaceApi}/items/create-item`, payload);
     } catch (error) {
