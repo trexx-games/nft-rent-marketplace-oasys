@@ -13,8 +13,8 @@ app.use(express.json());
 app.use("/items", itemRoutes);
 app.use("/pools", poolRoutes);
 app.use("/rents", rentRoutes);
-const PORT = process.env.PORT || 80;
-//to test locally you can use the code below
+const PORT = process.env.PORT || 8080;
+
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
 });
