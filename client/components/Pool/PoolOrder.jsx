@@ -57,18 +57,13 @@ export default function PoolOrder({ pool }) {
     setRentDays(value);
     const contract = await sdk.getContract(NFT_RENT_MARKETPLACE_ADDRESS);
     const price = await contract.call('getRentQuote', [pool.category_id, value]);
-    if (price?.rentQuoteDollar._hex) {
-      const poolUSDPriceBigNumber = ethers.BigNumber.from(
-        price.rentQuoteDollar._hex,
+    if (price?._hex) {
+      const poolPrice = ethers.BigNumber.from(
+        price?._hex,
       );
-      const poolMATICPriceBigNumber = ethers.BigNumber.from(
-        price.rentQuoteMatic._hex,
+      setPoolPrice(
+        poolPrice
       );
-      setPoolUSDPrice(ethers.utils.formatUnits(poolUSDPriceBigNumber));
-      setPoolMATICFormatedPrice(
-        ethers.utils.formatUnits(poolMATICPriceBigNumber),
-      );
-      setPoolMATICPrice(price.rentQuoteMatic);
     } else {
       console.error('No quote has returned');
     }
