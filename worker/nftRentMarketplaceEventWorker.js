@@ -23,6 +23,7 @@ class NFTRentMarketplaceEventWorker {
     this.contract.events.addEventListener('ItemAddedToPool', this.onItemAddedToPool.bind(this));
   }
 
+
   async onRentStarted(event) {
     const item = await axios.get(`${this.nftRentMarketplaceApi}/items/get-by-nft-id/${Number(event.data.itemNftId._hex)}`)
     try {
