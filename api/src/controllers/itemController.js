@@ -153,6 +153,20 @@ class ItemController {
     }
   }
 
+  async getById(req, res) {
+    const { id } = req.params;
+    if (!id) {
+      return res.status(400).json({ error: 'Item id is required.' });
+    }
+
+    try {
+      const item = await this.itemService.getById(id);
+      res.status(200).json(item);
+    } catch (error) {
+      console.error('Error getting item by id: ', error.stack);
+      res.status(500).json({ error: 'Server error.' });
+    }
+  }
 }
 
 module.exports = ItemController;
