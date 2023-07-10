@@ -67,16 +67,16 @@ class RentModel {
     }
   }
 
-  async finishRent(id) {
+  async finishRent({ id, finishDate }) {
     const query = `
       UPDATE rents
-      SET rent_status_id = ${RENT_STATUS_ENUM.FINISHED}
+      SET rent_status_id = ${RENT_STATUS_ENUM.FINISHED}, finish_date = $2
       WHERE id = $1
       RETURNING *;
     `;
 
     try {
-      const result = await this.pool.query(query, [id]);
+      const result = await this.pool.query(query, [id, finishDate]);
       return camelize(result.rows);
     } catch (error) {
       console.error('Error finishing rent: ', error.stack);

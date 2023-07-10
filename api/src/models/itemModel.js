@@ -37,14 +37,14 @@ class ItemModel {
     }
   }
 
-  async getByOwner(owner) {
+  async getByOwner(ownerAddress) {
     const query = `
       SELECT *
       FROM items
       WHERE items.owner_address = $1;
     `;
     try {
-      const result = this.pool.query(query, [owner]);
+      const result = this.pool.query(query, [ownerAddress]);
       return camelize(result.rows);
     }
     catch (error) {
@@ -53,14 +53,30 @@ class ItemModel {
     }
   }
 
-  async getIdleByOwner(owner) {
+  async getById(itemId) {
+    const query = `
+      SELECT *
+      FROM items
+      WHERE items.id = $1;
+    `;
+    try {
+      const result = this.pool.query(query, [itemId]);
+      return camelize(result.rows[0]);
+    }
+    catch (error) {
+      console.error("Error getting item by Id: ", error.stack);
+      throw error;
+    }
+  }
+
+  async getIdleByOwner(ownerAddress) {
     const query = `
       SELECT *
       FROM items
       WHERE items.owner_address = $1 AND items.is_in_pool = false;
     `;
     try {
-      const result = this.pool.query(query, [owner]);
+      const result = this.pool.query(query, [ownerAddress]);
       return camelize(result.rows);
     }
     catch (error) {
@@ -69,14 +85,14 @@ class ItemModel {
     }
   }
 
-  async rentItem(itemId, rentee) {
+  async rentItem({ itemId, renteeAddress }) {
     const query = `
       UPDATE items
       SET rentee_address = $1, is_rented = true
       WHERE id = $2;
     `;
     try {
-      const result = this.pool.query(query, [rentee, itemId]);
+      const result = this.pool.query(query, [renteeAddress, itemId]);
       return camelize(result.rows);
     }
     catch (error) {
@@ -117,14 +133,14 @@ class ItemModel {
     }
   }
 
-  async getItemsInPoolByUser(owner) {
+  async getItemsInPoolByUser(ownerAddress) {
     const query = `
       SELECT *
       FROM items
       WHERE items.owner_address = $1 AND items.is_in_pool = true;
     `;
     try {
-      const result = this.pool.query(query, [owner]);
+      const result = this.pool.query(query, [ownerAddress]);
       return camelize(result.rows);
     }
     catch (error) {
@@ -133,14 +149,14 @@ class ItemModel {
     }
   }
 
-  async getItemsRentedByUser(owner) {
+  async getItemsRentedByUser(ownerAddress) {
     const query = `
       SELECT *
       FROM items
       WHERE items.owner_address = $1 AND items.is_rented = true;
     `;
     try {
-      const result = this.pool.query(query, [owner]);
+      const result = this.pool.query(query, [ownerAddress]);
       return camelize(result.rows);
     }
     catch (error) {
