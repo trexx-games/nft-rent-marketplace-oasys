@@ -33,10 +33,8 @@ import {
 import NFTCard from '../NFT/NFTCard';
 import { ethers } from 'ethers';
 import NEXTLink from 'next/link';
-import useSWR from 'swr';
 import { URLS } from '../../config/urls';
-
-const fetcher = (...args) => fetch(...args).then((res) => res.json());
+import axios from 'axios';
 
 export default function PoolOrder({ pool }) {
   const { isOpen, onOpen, onClose } = useDisclosure();
@@ -80,10 +78,7 @@ export default function PoolOrder({ pool }) {
         { value: poolPrice },
       );
       const itemId = result.receipt.events[0].args.itemId.toNumber();
-      const { data: item } = useSWR(
-        `${URLS.ITEMS}/${itemId}`,
-        fetcher,
-      );
+      const item = axios.get(`${URLS.ITEMS}/${itemId}`);
       const nftId = item?.nftId;
       const nft = await getNft(nftId, pool.gameId);
       setNft(nft);
