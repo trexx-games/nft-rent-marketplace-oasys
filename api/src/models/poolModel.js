@@ -1,4 +1,5 @@
 const pool = require('../../helpers/pgConnection');
+const camelize = require('camelize');
 
 class PoolModel {
   constructor() {
@@ -15,7 +16,7 @@ class PoolModel {
 
     try {
       const result = await this.pool.query(query, [categoryId, gameId, basePrice]);
-      return result.rows[0];
+      return camelize(result.rows[0]);
     } catch (error) {
       console.error('Error creating pool: ', error.stack);
     }
@@ -32,7 +33,7 @@ class PoolModel {
 
     try {
       const result = await this.pool.query(query, [id]);
-      return result.rows;
+      return camelize(result.rows);
     } catch (error) {
       console.error('Error getting pool by ID: ', error.stack);
     }
@@ -54,7 +55,7 @@ class PoolModel {
 
     try {
       const result = await this.pool.query(query);
-      return result.rows;
+      return camelize(result.rows);
     } catch (error) {
       console.error('Error getting all pools: ', error.stack);
     }
