@@ -30,7 +30,7 @@ class NFTRentMarketplaceEventWorker {
       const payload = {
         id: Number(`${event.data.rentId._hex}`),
         itemId: item.id,
-        poolId: Number(`${event.data.poolId._hex}`),
+        categoryId: Number(`${event.data.poolId._hex}`),
         renteeAddress: event.data.rentee,
         ownerAddress: event.data.owner,
         priceBlockchain: Number(`${event.data.price._hex}`),
