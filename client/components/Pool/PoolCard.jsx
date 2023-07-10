@@ -36,14 +36,14 @@ export default function PoolCard({ pool }) {
     6: GiVisoredHelm,
   };
 
-  const icon = icons[pool.category_id];
+  const icon = icons[pool.categoryId];
 
-  const background = rarityColors[pool.category_id] || 'black';
+  const background = rarityColors[pool.categoryId] || 'black';
   const gameLogos = {
     1: 'logos/logo_bbg.png',
     2: 'logos/logo_cursed_stone.png',
   };
-  const gameLogo = gameLogos[pool.game_id];
+  const gameLogo = gameLogos[pool.gameId];
   return (
     <Flex
       overflow={'hidden'}
@@ -61,8 +61,8 @@ export default function PoolCard({ pool }) {
     >
       <Box backgroundColor={'white'} position="relative">
         <Image
-          src={pool.image_url}
-          alt={pool.category_id}
+          src={pool.imageUrl}
+          alt={pool.categoryId}
           width={'100%'}
           transition={hoverTransition}
         />
@@ -84,7 +84,7 @@ export default function PoolCard({ pool }) {
           fontFamily={'Manrope'}
           mb={1}
         >
-          {pool.category_name}
+          {pool.categoryName}
         </Text>
         <Text
           color={'white'}
@@ -92,7 +92,7 @@ export default function PoolCard({ pool }) {
           fontFamily={'Dela Gothic One'}
           mb={1}
         >
-          {pool.rarity_name}
+          {pool.rarityName}
         </Text>
       </Box>
     </Flex>
