@@ -33,7 +33,6 @@ class NFTRentMarketplaceEventWorker {
         poolId: Number(`${event.data.poolId._hex}`),
         renteeAddress: event.data.rentee,
         ownerAddress: event.data.owner,
-        nftId: Number(`${event.data.itemNftId._hex}`),
         priceBlockchain: Number(`${event.data.price._hex}`),
         expirationDate: new Date(Number(`${event.data.expirationDate._hex}`) * 1000),
         initDate: new Date(Number(`${event.data.initDate._hex}`) * 1000),
@@ -45,8 +44,9 @@ class NFTRentMarketplaceEventWorker {
   }
   async onRentFinished(event) {
     const payload = {
-      rentId: Number(`${event.data.rentId._hex}`),
+      id: Number(`${event.data.rentId._hex}`),
       finishDate: new Date(Number(`${event.data.finishDate._hex}`) * 1000),
+      itemId: Number(`${event.data.itemId._hex}`),
     }
     try {
       await axios.post(`${this.nftRentMarketplaceApi}/rents/finish-rent`, payload);
@@ -54,6 +54,7 @@ class NFTRentMarketplaceEventWorker {
       console.error('Error:', error.message);
     }
   }
+
   async onPoolCreated(event) {
     try {
       const payload = {
@@ -67,6 +68,7 @@ class NFTRentMarketplaceEventWorker {
       console.error('Error:', error.message);
     }
   }
+
   async onItemCreated(event) {
     try {
       const payload = {
@@ -86,9 +88,9 @@ class NFTRentMarketplaceEventWorker {
       console.error('Error:', error.message);
     }
   }
+
   async onItemAddedToPool(event) {
     try {
-      console.log(event);
       const nftId = Number(`${event.data.nftId._hex}`)
       await axios.post(`${this.nftRentMarketplaceApi}/items/add-to-pool/${nftId}`);
     } catch (error) {
