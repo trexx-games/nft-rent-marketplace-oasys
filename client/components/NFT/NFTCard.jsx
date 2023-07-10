@@ -1,7 +1,6 @@
 import React from 'react';
 import { ThirdwebNftMedia } from '@thirdweb-dev/react';
 import { Box, Flex, Text, useColorModeValue } from '@chakra-ui/react';
-import { ItemCategory } from '../../const/item_categories';
 
 export default function NFTCard({ nft }) {
   const boxShadowColor = useColorModeValue(

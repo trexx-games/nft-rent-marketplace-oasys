@@ -33,6 +33,10 @@ import {
 import NFTCard from '../NFT/NFTCard';
 import { ethers } from 'ethers';
 import NEXTLink from 'next/link';
+import useSWR from 'swr';
+import { URLS } from '../../config/urls';
+
+const fetcher = (...args) => fetch(...args).then((res) => res.json());
 
 export default function PoolOrder({ pool }) {
   const { isOpen, onOpen, onClose } = useDisclosure();
@@ -54,7 +58,7 @@ export default function PoolOrder({ pool }) {
   const handleRentDaysChange = async (value) => {
     setRentDays(value);
     const contract = await sdk.getContract(NFT_RENT_MARKETPLACE_ADDRESS);
-    const price = await contract.call('getRentQuote', [pool.category_id, value]);
+    const price = await contract.call('getRentQuote', [pool.categoryId, value]);
     if (price?._hex) {
       const poolPrice = ethers.BigNumber.from(
         price?._hex,
@@ -72,11 +76,16 @@ export default function PoolOrder({ pool }) {
       const contract = await sdk.getContract(NFT_RENT_MARKETPLACE_ADDRESS);
       const result = await contract.call(
         'startRent',
-        [pool.category_id, Number(rentDays)],
+        [pool.categoryId, Number(rentDays)],
         { value: poolPrice },
       );
-      const nftId = result.receipt.events[0].args.itemNftId.toNumber(); //fixme
-      const nft = await getNft(nftId, pool.game_id);
+      const itemId = result.receipt.events[0].args.itemId.toNumber();
+      const { data: item } = useSWR(
+        `${URLS.ITEMS}/${itemId}`,
+        fetcher,
+      );
+      const nftId = item?.nftId;
+      const nft = await getNft(nftId, pool.gameId);
       setNft(nft);
       onOpen();
     } catch (error) {
@@ -109,25 +118,25 @@ export default function PoolOrder({ pool }) {
     <VStack spacing={6} align="stretch" padding={'10px'}>
       <Box marginTop={'10%'}>
         <Heading fontFamily={'Manrope'} size="xl" mt={2}>
-          {pool.category_name} Pool
+          {pool.categoryName} Pool
         </Heading>
         <Text
           fontSize={20}
           fontFamily={'Manrope'}
           fontWeight={'bold'}
         >
-          Rarity: {pool.rarity_name}
+          Rarity: {pool.rarityName}
         </Text>
       </Box>
       <Box>
-        <Image src={pool.image_url} alt={pool.category_name} />
+        <Image src={pool.imageUrl} alt={pool.categoryName} />
       </Box>
       <Box>
         <Text fontSize={20} fontFamily={'Manrope'} fontWeight={'bold'}>
           Description:
         </Text>
         <Text mb={2} fontFamily={'Manrope'}>
-          {pool.short_description}
+          {pool.shortDescription}
         </Text>
         <Box>
           <Flex direction="row" gap={10} justify="flex-start" mb={3}>

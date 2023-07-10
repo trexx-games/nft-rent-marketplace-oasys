@@ -68,7 +68,6 @@ function RentedNFT({ nftId, rentData }) {
 }
 export default function Inventory() {
   const address = useAddress();
-  //ver o useContract, como fazer para usar a Oasys
   const { contract: nftCollectionBBG } = useContract(NFT_BBG_ADDRESS);
   const { data: ownedNftsBBG, isLoading: isLoadingBBG } = useOwnedNFTs(
     nftCollectionBBG,
