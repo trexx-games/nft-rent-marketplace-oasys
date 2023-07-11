@@ -91,14 +91,14 @@ class RentController {
   }
 
   async finishRent(req, res) {
-    const { id, finishDate, itemId } = req.body;
+    const rentData = req.body;
     const requiredFields = ['id', 'finishDate', 'itemId'];
     for (const field of requiredFields) {
       if (!rentData[field]) {
         return res.status(400).json({ error: `Field ${field} is required.` });
       }
     }
-
+    const { id, finishDate, itemId } = rentData;
     try {
       const rent = await this.rentService.finishRent({ id, finishDate });
       if (!rent) {

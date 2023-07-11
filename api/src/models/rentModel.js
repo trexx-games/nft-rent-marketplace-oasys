@@ -10,7 +10,7 @@ class RentModel {
   async createRent({ id, initDate, expirationDate, priceBlockchain, ownerAddress, renteeAddress, categoryId, itemId }) {
     const query = `
       INSERT INTO rents (id, init_date, expiration_date, price_blockchain, owner_address, rentee_address, category_id, item_id, rent_status_id)
-      VALUES ($1, $2, $3, $4, $5, $6, $7, ${RENT_STATUS_ENUM.ACTIVE})
+      VALUES ($1, $2, $3, $4, $5, $6, $7, $8, ${RENT_STATUS_ENUM.ACTIVE})
       RETURNING *;
     `;
 
@@ -54,11 +54,11 @@ class RentModel {
 
   async getActiveByRentee(renteeAddress) {
     const query = `
-      SELECT *
+      SELECT rents.*, items.nft_id, game_id, nft_contract_address
       FROM rents
-      WHERE rentee_address = $1 AND rent_status_id = ${RENT_STATUS_ENUM.ACTIVE};
+      JOIN items ON rents.item_id = items.id
+      WHERE rents.rentee_address = $1 AND rent_status_id = ${RENT_STATUS_ENUM.ACTIVE};
     `;
-
     try {
       const result = await this.pool.query(query, [renteeAddress]);
       return camelize(result.rows);
