@@ -39,12 +39,7 @@ import { URLS } from '../config/urls';
 const fetcher = (...args) => fetch(...args).then((res) => res.json());
 
 function RentedNFT({ nftId, rentData }) {
-  const nftAddresses = {
-    1: NFT_BBG_ADDRESS,
-    2: NFT_CS_ADDRESS,
-  }
-  const nftAddress = nftAddresses[rentData.gameid]
-  const { contract: nftCollection } = useContract(nftAddress);
+  const { contract: nftCollection } = useContract(rentData.nftContractAddress);
   const { data: rentedNft } = useNFT(nftCollection, nftId);
   const { isOpen, onOpen, onClose } = useDisclosure();
 
@@ -58,7 +53,7 @@ function RentedNFT({ nftId, rentData }) {
           <DrawerContent>
             <DrawerCloseButton />
             <DrawerBody>
-              <NFTRentedOrder nft={rentedNft} rentId={rentData.id} nftAddress={nftAddress} />
+              <NFTRentedOrder nft={rentedNft} rentId={rentData.id} nftAddress={rentData.nftContractAddress} />
             </DrawerBody>
           </DrawerContent>
         </DrawerOverlay>
@@ -78,10 +73,12 @@ export default function Inventory() {
   const ownedNfts = [...ownedNftsBBGWithContract];
 
   const isLoading = isLoadingBBG;
+
   const { data: rentedItems, isLoading: rentedItemsLoading } = useSWR(
     `${URLS.RENTS}/get-active-by-rentee/${address}`,
     fetcher,
   );
+  console.log(rentedItems)
   return (
     <Container maxW={'90%'} p={5}>
       <Accordion defaultIndex={[0]} allowToggle>
@@ -177,11 +174,11 @@ export default function Inventory() {
                 [...Array(3)].map((_, index) => (
                   <Skeleton key={index} height={'150px'} width={'250px'} />
                 ))
-              ) : rentedItems?.rents?.length > 0 ? (
-                rentedItems?.rents?.map((rentedItem) => (
+              ) : rentedItems?.length > 0 ? (
+                rentedItems?.map((rentedItem) => (
                   <RentedNFT
-                    key={rentedItem.nftid}
-                    nftId={rentedItem.nftid}
+                    key={rentedItem.nftId}
+                    nftId={rentedItem.nftId}
                     rentData={rentedItem}
                   />
                 ))

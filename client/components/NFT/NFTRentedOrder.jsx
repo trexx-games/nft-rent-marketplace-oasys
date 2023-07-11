@@ -20,7 +20,7 @@ import {
 import React, { useState } from 'react';
 import { darken } from '@chakra-ui/theme-tools';
 
-export default function NFTRentedOrder({ nft, rentId, nftAddress }) {
+export default function NFTRentedOrder({ nft, rentId }) {
   const toast = useToast();
   const signer = useSigner();
   let sdk;
@@ -33,7 +33,7 @@ export default function NFTRentedOrder({ nft, rentId, nftAddress }) {
     try {
       setIsLoading(true);
       const contract = await sdk.getContract(NFT_RENT_MARKETPLACE_ADDRESS);
-      await contract.call('finishRent', [rentId, nftAddress]);
+      await contract.call('finishRent', [rentId]);
       toast({
         title: 'Success!',
         description: 'Your rent is finished.',
