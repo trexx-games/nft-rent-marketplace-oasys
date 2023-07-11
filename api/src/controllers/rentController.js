@@ -75,7 +75,7 @@ class RentController {
     const { renteeAddress } = req.params;
 
     if (!renteeAddress) {
-      return res.status(400).json({ error: 'Rentee adress is required.' });
+      return res.status(400).json({ error: 'Rentee address is required.' });
     }
     try {
       const rents = await this.rentService.getActiveByRentee(renteeAddress);
