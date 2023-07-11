@@ -291,7 +291,7 @@ contract NFTRentMarketplace is ConfirmedOwner, IERC721Receiver {
       newRentId,
       _categoryId,
       msg.sender,
-      item.nftId,
+      item.id,
       newRent.initDate,
       newRent.expirationDate,
       _rentPrice,
