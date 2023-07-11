@@ -19,11 +19,56 @@ import {
   ModalFooter,
   Button,
 } from '@chakra-ui/react';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 
 export function Navbar() {
   const [activeTab, setActiveTab] = useState('');
+  const [loggedIn, setLoggedIn] = useState(false);
+  const [user, setUser] = useState({});
   const address = useAddress();
+
+  useEffect(() => {
+    checkLogin();
+  }, []);
+
+  const login = async () => {
+    try {
+      const loggedIn = await checkLogin();
+
+      if (!loggedIn) await window.SingularityEvent.open();
+      setLoggedIn(true);
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
+  const checkLogin = async () => {
+    try {
+      console.log('checking login');
+      const tempUser = await window.SingularityEvent.getConnectUserInfo();
+      setUser(tempUser);
+
+      if (tempUser && tempUser.metaData) {
+        console.log('user is logged in', tempUser.metaData);
+        setLoggedIn(true);
+        return true;
+      }
+    } catch (err) {
+      console.error(err);
+    }
+
+    return false;
+  };
+
+  const logout = async () => {
+    try {
+      await window.SingularityEvent.logout();
+      setLoggedIn(false);
+    } catch (err) {
+      console.error(err);
+      window.alert('Some error occured');
+    }
+  };
 
   return (
     <Box maxW={'85%'} m={'auto'} py={'14px'} px={'35px'}>
@@ -84,9 +129,22 @@ export function Navbar() {
           </Link>
         </Flex>
         <Flex direction={'row'} alignItems={'center'}>
-          <ConnectWallet style={{ fontFamily: 'Manrope' }} />
+          {loggedIn ? (
+            <>
+              <Button style={{ fontFamily: 'Manrope' }} onClick={logout}>
+                Logout
+              </Button>
+              <Text style={{ color: 'red' }}>
+                {user.metaData.userMetaData.name}
+              </Text>
+            </>
+          ) : (
+            <Button style={{ fontFamily: 'Manrope' }} onClick={login}>
+              Login
+            </Button>
+          )}
         </Flex>
       </Flex>
-    </Box >
+    </Box>
   );
 }
