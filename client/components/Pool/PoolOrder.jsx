@@ -77,9 +77,9 @@ export default function PoolOrder({ pool }) {
         [pool.categoryId, Number(rentDays)],
         { value: poolPrice },
       );
-      const itemId = result.receipt.events[0].args.itemId.toNumber();
-      const item = axios.get(`${URLS.ITEMS}/${itemId}`);
-      const nftId = item?.nftId;
+      const itemId = Number(result.receipt.events[0].args.itemId._hex);
+      const item = await axios.get(`${URLS.ITEMS}/${itemId}`);
+      const nftId = item?.data?.nftId;
       const nft = await getNft(nftId, pool.gameId);
       setNft(nft);
       onOpen();

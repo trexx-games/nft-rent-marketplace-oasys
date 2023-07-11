@@ -25,11 +25,11 @@ class NFTRentMarketplaceEventWorker {
 
 
   async onRentStarted(event) {
-    const item = await axios.get(`${this.nftRentMarketplaceApi}/items/get-by-nft-id/${Number(event.data.itemNftId._hex)}`)
+    const item = await axios.get(`${this.nftRentMarketplaceApi}/items/${Number(event.data?.itemId?._hex)}`)
     try {
       const payload = {
         id: Number(`${event.data.rentId._hex}`),
-        itemId: item.id,
+        itemId: item?.id,
         categoryId: Number(`${event.data.poolId._hex}`),
         renteeAddress: event.data.rentee,
         ownerAddress: event.data.owner,
@@ -39,7 +39,7 @@ class NFTRentMarketplaceEventWorker {
       }
       await axios.post(`${this.nftRentMarketplaceApi}/rents/start-rent`, payload);
     } catch (error) {
-      console.error('Error:', error.message);
+      console.error('Error:', error);
     }
   }
   async onRentFinished(event) {
@@ -51,7 +51,7 @@ class NFTRentMarketplaceEventWorker {
     try {
       await axios.post(`${this.nftRentMarketplaceApi}/rents/finish-rent`, payload);
     } catch (error) {
-      console.error('Error:', error.message);
+      console.error('Error:', error);
     }
   }
 
@@ -65,7 +65,7 @@ class NFTRentMarketplaceEventWorker {
       await axios.post(`${this.nftRentMarketplaceApi}/pools/create-pool`, payload);
     } catch (error) {
       console.log(error);
-      console.error('Error:', error.message);
+      console.error('Error:', error);
     }
   }
 
@@ -85,7 +85,7 @@ class NFTRentMarketplaceEventWorker {
       await axios.post(`${this.nftRentMarketplaceApi}/items/create-item`, payload);
     } catch (error) {
       console.log(error);
-      console.error('Error:', error.message);
+      console.error('Error:', error);
     }
   }
 
@@ -94,7 +94,7 @@ class NFTRentMarketplaceEventWorker {
       const nftId = Number(`${event.data.nftId._hex}`)
       await axios.put(`${this.nftRentMarketplaceApi}/items/add-to-pool/${nftId}`);
     } catch (error) {
-      console.error('Error:', error.message);
+      console.error('Error:', error);
     }
   }
 }
