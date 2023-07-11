@@ -25,11 +25,11 @@ class NFTRentMarketplaceEventWorker {
 
 
   async onRentStarted(event) {
-    const item = await axios.get(`${this.nftRentMarketplaceApi}/items/${Number(event.data?.itemId?._hex)}`)
     try {
+      const item = await axios.get(`${this.nftRentMarketplaceApi}/items/${Number(event.data?.itemId?._hex)}`)
       const payload = {
         id: Number(`${event.data.rentId._hex}`),
-        itemId: item?.id,
+        itemId: Number(item?.data.id),
         categoryId: Number(`${event.data.poolId._hex}`),
         renteeAddress: event.data.rentee,
         ownerAddress: event.data.owner,
@@ -64,7 +64,6 @@ class NFTRentMarketplaceEventWorker {
       }
       await axios.post(`${this.nftRentMarketplaceApi}/pools/create-pool`, payload);
     } catch (error) {
-      console.log(error);
       console.error('Error:', error);
     }
   }
@@ -84,7 +83,6 @@ class NFTRentMarketplaceEventWorker {
       }
       await axios.post(`${this.nftRentMarketplaceApi}/items/create-item`, payload);
     } catch (error) {
-      console.log(error);
       console.error('Error:', error);
     }
   }
