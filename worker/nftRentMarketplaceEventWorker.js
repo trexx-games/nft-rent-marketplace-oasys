@@ -92,7 +92,7 @@ class NFTRentMarketplaceEventWorker {
   async onItemAddedToPool(event) {
     try {
       const nftId = Number(`${event.data.nftId._hex}`)
-      await axios.post(`${this.nftRentMarketplaceApi}/items/add-to-pool/${nftId}`);
+      await axios.put(`${this.nftRentMarketplaceApi}/items/add-to-pool/${nftId}`);
     } catch (error) {
       console.error('Error:', error.message);
     }
