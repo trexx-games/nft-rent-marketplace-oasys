@@ -1,5 +1,11 @@
 # NFT Rent Marketplace
 
+## DEMO MARKETPLACE
+https://www.youtube.com/watch?v=iIMwuaPCLWY
+
+## DEMO INTEGRATION WITH SINGULARITY SDK
+https://youtu.be/_uxGyzoAbws
+
 This is a platform that allows users to rent their NFTs to other players. The platform is built using a microservices architecture, with each service running in its own Docker container. The services include:
 
 - `API`: This is the backend API service that handles all the business logic.
