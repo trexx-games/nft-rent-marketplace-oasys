@@ -5,7 +5,6 @@ import { Navbar } from '../components/Navbar';
 import Head from 'next/head';
 import { OASYS_CONNECTION } from '../config/blockchain';
 import { useState, useEffect } from 'react';
-import { sdkKey } from '../config/walletSdk';
 
 function MyApp({ Component, pageProps }) {
   const [loading, setLoading] = useState(true);
@@ -32,7 +31,7 @@ function MyApp({ Component, pageProps }) {
       'https://unpkg.com/singularity-client-script@1.7.0/index.js',
       '',
       '',
-      'production',
+      'sandbox',
     );
 
     console.log('adding event listener', new Date().getSeconds());
@@ -44,7 +43,7 @@ function MyApp({ Component, pageProps }) {
         key = localStorage.getItem('singularity-key');
       } else {
         console.log('using default key value');
-        key = sdkKey;
+        key = 20197;
       }
       localStorage.setItem('singularity-key', key);
       console.log(

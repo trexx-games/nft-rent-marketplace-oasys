@@ -16,9 +16,13 @@ import { useSigner } from '@thirdweb-dev/react';
 import { ThirdwebSDK } from '@thirdweb-dev/sdk';
 import {
   NFT_RENT_MARKETPLACE_ADDRESS,
-  NFT_CS_ADDRESS,
+  NFT_RENT_MARKETPLACE_ABI,
   NFT_BBG_ADDRESS,
+  NFT_BBG_ABI,
+  NFT_CS_ADDRESS,
+  NFT_CS_ABI,
 } from '../../const/addresses';
+import { ethers } from 'ethers';
 import React, { useState } from 'react';
 
 export default function NFTOwnedOrder({ nft }) {
@@ -29,6 +33,23 @@ export default function NFTOwnedOrder({ nft }) {
     sdk = ThirdwebSDK.fromSigner(signer);
   }
   const [isLoading, setIsLoading] = useState(false);
+  const provider = new ethers.providers.JsonRpcProvider(OASYS_CONNECTION.rpc);
+  const nftCsContract = new ethers.Contract(
+    NFT_CS_ADDRESS,
+    NFT_CS_ABI,
+    provider,
+  );
+  const nftBbgContract = new ethers.Contract(
+    NFT_BBG_ADDRESS,
+    NFT_BBG_ABI,
+    provider,
+  );
+  const nftRentMarketplaceContract = new ethers.Contract(
+    NFT_RENT_MARKETPLACE_ADDRESS,
+    NFT_RENT_MARKETPLACE_ABI,
+    provider,
+  );
+
   const addItemToPool = async () => {
     setIsLoading(true);
     try {
@@ -41,16 +62,20 @@ export default function NFTOwnedOrder({ nft }) {
         throw new Error('Unknown NFT contract address');
       }
 
-      await nftContract.call('approve', [
+      let unsignedApproveTxn = await nftContract.populateTransaction.approve([
         NFT_RENT_MARKETPLACE_ADDRESS,
         parseInt(nft.metadata.id),
       ]);
-      const marketplaceContract = await sdk.getContract(
-        NFT_RENT_MARKETPLACE_ADDRESS,
+      await window.SingularityEvent.signAndSendTransaction(unsignedApproveTxn);
+
+      let unsignedAddItemToPoolTxn =
+        await nftRentMarketplaceContract.populateTransaction.addItemToPool([
+          parseInt(nft.metadata.id),
+          nft.contract,
+        ]);
+      await window.SingularityEvent.signAndSendTransaction(
+        unsignedAddItemToPoolTxn,
       );
-      await marketplaceContract.call('addItemToPool', [
-        parseInt(nft.metadata.id), nft.contract
-      ]);
       toast({
         title: 'Success',
         description: 'Your item is in pool for rent!',

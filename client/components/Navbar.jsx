@@ -1,7 +1,7 @@
 import { ConnectWallet, useAddress } from '@thirdweb-dev/react';
 import NextLink from 'next/link';
 import { HiHome } from 'react-icons/hi';
-import { GiLockedChest } from 'react-icons/gi';
+import { FaWallet } from 'react-icons/fa';
 import {
   Link,
   Icon,
@@ -49,7 +49,7 @@ export function Navbar() {
       setUser(tempUser);
 
       if (tempUser && tempUser.metaData) {
-        console.log('user is logged in', tempUser.metaData);
+        console.log('user is logged in, user details: ', tempUser.metaData);
         setLoggedIn(true);
         return true;
       }
@@ -67,6 +67,15 @@ export function Navbar() {
     } catch (err) {
       console.error(err);
       window.alert('Some error occured');
+    }
+  };
+
+  const showAccount = async () => {
+    try {
+      const loggedIn = await checkLogin();
+      if (loggedIn) await window.SingularityEvent.open();
+    } catch (err) {
+      console.error(err);
     }
   };
 
@@ -131,12 +140,17 @@ export function Navbar() {
         <Flex direction={'row'} alignItems={'center'}>
           {loggedIn ? (
             <>
-              <Button style={{ fontFamily: 'Manrope' }} onClick={logout}>
+              <Button
+                style={{ fontFamily: 'Manrope' }}
+                marginRight={3}
+                onClick={logout}
+              >
                 Logout
               </Button>
-              <Text style={{ color: 'red' }}>
+              <Button style={{ color: 'green' }} onClick={showAccount}>
+                <Icon as={FaWallet} boxSize={7} marginRight={2} />
                 {user.metaData.userMetaData.name}
-              </Text>
+              </Button>
             </>
           ) : (
             <Button style={{ fontFamily: 'Manrope' }} onClick={login}>
