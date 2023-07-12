@@ -10,15 +10,3 @@ Our event worker is a container that listens to blockchain events and updates th
 
 ### AWS S3
 We use AWS S3 to store off-chain assets, currently the images of the pools. S3 provides us with benefits such as high durability, high availability, and scalability.
-
-### Chainlink Functions + Automations
-We use Chainlink Functions and Automations to update the market price index, which adjusts prices based on transaction volume. This ensures that prices decrease in times of low transaction volume and increase in times of high transaction volume, with an initial reference point of 100.
-
-### Chainlink VRF
-We use Chainlink VRF (Verifiable Random Function) to ensure randomness in the selection of items from the pool. This provides a fair and transparent method of item selection.
-
-### Chainlink DataFeed
-We use Chainlink DataFeed to provide accurate and up-to-date price quotations in MATIC and USD.
-
-### Space and Time
-Our database, Space and Time, is populated from blockchain events and combines on-chain and off-chain data. This provides a comprehensive view of the marketplace and allows for efficient data management.
