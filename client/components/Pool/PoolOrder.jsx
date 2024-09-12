@@ -27,9 +27,12 @@ import { darken } from '@chakra-ui/theme-tools';
 import React, { useState, useEffect } from 'react';
 import {
   NFT_RENT_MARKETPLACE_ADDRESS,
+  NFT_RENT_MARKETPLACE_ABI,
   NFT_BBG_ADDRESS,
+  NFT_BBG_ABI,
   NFT_CS_ADDRESS,
 } from '../../const/addresses';
+import { OASYS_CONNECTION } from '../../config/blockchain';
 import NFTCard from '../NFT/NFTCard';
 import { ethers } from 'ethers';
 import NEXTLink from 'next/link';
@@ -38,16 +41,23 @@ import axios from 'axios';
 
 export default function PoolOrder({ pool }) {
   const { isOpen, onOpen, onClose } = useDisclosure();
-  const signer = useSigner();
   const toast = useToast();
-  let sdk;
-  if (signer) {
-    sdk = ThirdwebSDK.fromSigner(signer);
-  }
   const [isLoading, setIsLoading] = useState(false);
   const [nft, setNft] = useState(null);
   const [poolPrice, setPoolPrice] = useState(0);
   const [rentDays, setRentDays] = useState(1);
+
+  let sdk;
+  if (signer) {
+    sdk = ThirdwebSDK.fromSigner(signer);
+  }
+
+  const provider = new ethers.providers.JsonRpcProvider(OASYS_CONNECTION.rpc);
+  const nftRentMarketplaceContract = new ethers.Contract(
+    NFT_RENT_MARKETPLACE_ADDRESS,
+    NFT_RENT_MARKETPLACE_ABI,
+    provider,
+  );
 
   useEffect(() => {
     handleRentDaysChange(rentDays);
@@ -55,27 +65,28 @@ export default function PoolOrder({ pool }) {
 
   const handleRentDaysChange = async (value) => {
     setRentDays(value);
-    const contract = await sdk.getContract(NFT_RENT_MARKETPLACE_ADDRESS);
-    const price = await contract.call('getRentQuote', [pool.categoryId, value]);
+    const price = await nftRentMarketplaceContract.callStatic.getRentQuote([
+      pool.categoryId,
+      value,
+    ]);
     if (price?._hex) {
-      const poolPrice = ethers.BigNumber.from(
-        price?._hex,
-      );
-      setPoolPrice(
-        poolPrice
-      );
+      const poolPrice = ethers.BigNumber.from(price?._hex);
+      setPoolPrice(poolPrice);
     } else {
       console.error('No quote has returned');
     }
   };
+
   const rentItem = async () => {
     setIsLoading(true);
     try {
-      const contract = await sdk.getContract(NFT_RENT_MARKETPLACE_ADDRESS);
-      const result = await contract.call(
-        'startRent',
-        [pool.categoryId, Number(rentDays)],
-        { value: poolPrice },
+      const unsignedTxn =
+        await nftRentMarketplaceContract.populateTransaction.startRent(
+          [pool.categoryId, Number(rentDays)],
+          { value: poolPrice },
+        );
+      const result = await window.SingularityEvent.signAndSendTransaction(
+        unsignedTxn,
       );
       const itemId = Number(result.receipt.events[0].args.itemId._hex);
       const item = await axios.get(`${URLS.ITEMS}/${itemId}`);
@@ -115,11 +126,7 @@ export default function PoolOrder({ pool }) {
         <Heading fontFamily={'Manrope'} size="xl" mt={2}>
           {pool.categoryName} Pool
         </Heading>
-        <Text
-          fontSize={20}
-          fontFamily={'Manrope'}
-          fontWeight={'bold'}
-        >
+        <Text fontSize={20} fontFamily={'Manrope'} fontWeight={'bold'}>
           Rarity: {pool.rarityName}
         </Text>
       </Box>
@@ -135,7 +142,12 @@ export default function PoolOrder({ pool }) {
         </Text>
         <Box>
           <Flex direction="row" gap={10} justify="flex-start" mb={3}>
-            <Text fontSize={20} fontFamily={'Manrope'} fontWeight={'bold'} mt={2}>
+            <Text
+              fontSize={20}
+              fontFamily={'Manrope'}
+              fontWeight={'bold'}
+              mt={2}
+            >
               Rent for (days):
             </Text>
             <NumberInput
